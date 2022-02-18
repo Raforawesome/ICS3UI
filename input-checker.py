@@ -20,7 +20,6 @@ def run():  # make a function and use recursion to repeat the program
 		"Enter a string that ends with a consonant: "
 	]
 
-
 	for i in range(1, len(questions) + 1):  # add one because range loops are exclusive
 		question = questions[i - 1]  # subtract one to account for zero-indexing
 
@@ -36,7 +35,7 @@ def run():  # make a function and use recursion to repeat the program
 			if not _input.isnumeric() and check:  # check if our input consists of only numbers
 				check = False
 				message = "Whole numbers must be integers!\n"
-			
+
 			if check and not int(_input) >= 0:  # check if our number is above 0 (no negatives)
 				check = False
 				message = "Whole numbers must be positive!\n"
@@ -45,13 +44,12 @@ def run():  # make a function and use recursion to repeat the program
 				message = "That works!\n"
 			print(message)
 
-
 		elif i == 2:  # integer below 50
 			_input = input(question)  # prefix variable with underscore as 'input' is already a global
 
 			try:  # see if casting input to int errors
 				int(_input)
-			except:
+			except ValueError:
 				print("This number isn't an integer.\n")
 			else:
 				num = int(_input)
@@ -61,20 +59,18 @@ def run():  # make a function and use recursion to repeat the program
 				else:
 					print("That works!\n")
 
-
 		elif i == 3:
 			_input = input(question)  # prefix variable with underscore as 'input' is already a global
-			
+
 			try:
 				float(_input)
-			except:
+			except ValueError:
 				print('Provided input is not a valid decimal number.\n')
 			else:
 				if not _input.isnumeric():
 					print("That works!\n")
 				else:
 					print("That isn't a decimal number!\n")
-
 
 		elif i == 4:
 			_input = input(question)  # prefix variable with underscore as 'input' is already a global
@@ -85,16 +81,14 @@ def run():  # make a function and use recursion to repeat the program
 			else:
 				print("The first character of this string is not a vowel!\n")
 
-
 		elif i == 5:
 			_input = input(question)  # prefix variable with underscore as 'input' is already a global
 			char = _input[len(_input) - 1:len(_input)]
 
-			if (char.lower() in vowels) == False:
+			if not (char.lower() in vowels):
 				print("That works!\n")
 			else:
 				print("The last character of this string is not a consonant!\n")
-
 
 	rerun = True  # default value doesn't matter
 	while True:  # make checking code repeat until a valid answer is given
@@ -114,5 +108,6 @@ def run():  # make a function and use recursion to repeat the program
 		run()  # re-run this same function (recursion)
 	else:
 		exit()
+
 
 run()
