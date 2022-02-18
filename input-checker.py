@@ -49,7 +49,7 @@ def run():  # make a function and use recursion to repeat the program
 
 			try:  # see if casting input to int errors
 				int(_input)
-			except ValueError:
+			except ValueError:  # catch a specific type of error because pycharm whines about it
 				print("This number isn't an integer.\n")
 			else:
 				num = int(_input)
@@ -64,7 +64,7 @@ def run():  # make a function and use recursion to repeat the program
 
 			try:
 				float(_input)
-			except ValueError:
+			except ValueError:  # catch a specific type of error because pycharm whines about it
 				print('Provided input is not a valid decimal number.\n')
 			else:
 				if not _input.isnumeric():
@@ -74,16 +74,16 @@ def run():  # make a function and use recursion to repeat the program
 
 		elif i == 4:
 			_input = input(question)  # prefix variable with underscore as 'input' is already a global
-			char = _input[:1]
+			char = _input[:1]  # substring syntax
 
-			if char.lower() in vowels:
+			if char.lower() in vowels:  # shorthand for searching arrays for elements
 				print("That works!\n")
 			else:
 				print("The first character of this string is not a vowel!\n")
 
 		elif i == 5:
 			_input = input(question)  # prefix variable with underscore as 'input' is already a global
-			char = _input[len(_input) - 1:len(_input)]
+			char = _input[len(_input) - 1:len(_input)]  # ranges in python are exclusive
 
 			if not (char.lower() in vowels):
 				print("That works!\n")
