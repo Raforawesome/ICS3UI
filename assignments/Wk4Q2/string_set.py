@@ -17,7 +17,8 @@ def string_set(a_list):
 			element_count[e] = 1  # if it doesn't exist, presume 0 and set to 1
 
 	duplicates = []  # store our duplicates
-	for _, k in enumerate(element_count.keys()):  # technically redundant but enumerated loops are idiomatic across every programming language
+	for _, k in enumerate(
+			element_count.keys()):  # technically redundant but enumerated loops are idiomatic across every programming language
 		v = element_count[k]  # get count of current value
 		if v > 1:  # if element appeared more than once in the above loop
 			duplicates.append(k)  # add to our duplicates list
