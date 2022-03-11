@@ -30,7 +30,7 @@ text = smallfont.render('quit', True, color)
 # setting up a caption - you should change this
 capt = "Ms. H Example"
 
-# set up the screen width and heigth in a variables
+# set up the screen width and height in a variables
 width = screen.get_width()
 height = screen.get_height()
 
