@@ -68,8 +68,14 @@ class Shape:
 			else:
 				self.x = 0 + ((self.x + self.width) - self.screen.get_width())
 
-	def increment_y(self, increment):
-		self.y += increment
+	def increment_y(self, increment, with_bounds=False):
+		if not with_bounds:
+			self.y += increment
+		else:
+			if self.y + self.height <= self.screen.get_height():
+				self.y += increment
+			else:
+				self.y = 0 + ((self.y + self.height) - self.screen.get_height())
 
 	def set_y(self, y):
 		self.y = y
