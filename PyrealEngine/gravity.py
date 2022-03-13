@@ -3,6 +3,7 @@ class GravityManager:
 	gravity_enabled: bool = False
 	screen = None
 	shapes: list = []
+	bound_to_down: dict = {}
 
 	def __init__(self, screen):
 		self.gravity = 0.0
@@ -12,6 +13,14 @@ class GravityManager:
 	def register(self, *shapes):
 		for s in shapes:
 			self.shapes.append(s)
+			s.gravity_manager = self
+
+	def unregister(self, *shapes):
+		for s in shapes:
+			if s in self.shapes:
+				self.shapes.remove(s)
+				if s in self.bound_to_down:
+					del self.bound_to_down[s]
 
 	def gravity_step(self):
 		if self.gravity_enabled:
@@ -22,7 +31,12 @@ class GravityManager:
 					shape.set_y(y + self.gravity)
 				else:
 					shape.set_y(down_bound)
+					if shape in self.bound_to_down and shape is not None:
+						self.bound_to_down[shape](shape)
 
 	def set_gravity(self, gravity):
 		self.gravity = gravity
 		return self
+
+	def bind_to_down(self, shape, func):
+		self.bound_to_down[shape] = func

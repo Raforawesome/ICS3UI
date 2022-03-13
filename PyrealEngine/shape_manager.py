@@ -14,13 +14,20 @@ class ShapeManager:
 		for shape in self.shapes:
 			shape.draw(self.screen)
 
+	def destroy_shape(self, shape):
+		if shape in self.shapes:
+			self.shapes.remove(shape)
+		del shape
+
 	def new_rect(self, x, y, width, height, color=(0, 0, 0)):
 		new = Rectangle(x, y, width, height, color, self.screen)
+		new.manager = self
 		self.shapes.append(new)
 		return new
 
 	def new_circle(self, x, y, radius, color=(0, 0, 0)):
 		new = Circle(x, y, radius, color, self.screen)
+		new.manager = self
 		self.shapes.append(new)
 		return new
 
@@ -31,6 +38,8 @@ class Shape:
 	width: int
 	height: int
 	color: tuple
+	manager: ShapeManager
+	gravity_manager = None
 
 	def __init__(self, x, y, color=(0, 0, 0), screen=None):
 		self.x = x
@@ -122,6 +131,14 @@ class Shape:
 
 	def overlaps(self, other):
 		return self.x < other.x + other.width and self.x + self.width > other.x and self.y < other.y + other.height and self.y + self.height > other.y
+
+	def destroy(self):
+		if self in self.manager.shapes:
+			self.manager.shapes.remove(self)
+		if self.gravity_manager is not None:
+			self.gravity_manager.unregister(self)
+			self.gravity_manager = None
+		del self
 
 	def __str__(self):
 		return f"Rectangle({self.x}, {self.y}, {self.width}, {self.height})"
