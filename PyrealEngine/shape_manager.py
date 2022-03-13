@@ -19,6 +19,11 @@ class ShapeManager:
 		self.shapes.append(new)
 		return new
 
+	def new_circle(self, x, y, radius, color=(0, 0, 0)):
+		new = Circle(x, y, radius, color, self.screen)
+		self.shapes.append(new)
+		return new
+
 
 class Shape:
 	x: int
@@ -27,11 +32,9 @@ class Shape:
 	height: int
 	color: tuple
 
-	def __init__(self, x, y, width, height, color=(0, 0, 0), screen=None):
+	def __init__(self, x, y, color=(0, 0, 0), screen=None):
 		self.x = x
 		self.y = y
-		self.width = width
-		self.height = height
 		self.color = color
 		self.screen = screen
 
@@ -63,8 +66,10 @@ class Shape:
 		if not with_bounds:
 			self.x += increment
 		else:
-			if self.x + self.width <= self.screen.get_width():
+			if self.x + self.width <= self.screen.get_width() and self.x + increment >= (0 - self.width):
 				self.x += increment
+			elif self.x + increment < 0:
+				self.x = (self.screen.get_width() - self.width) - ((self.x + increment) - self.screen.get_width())
 			else:
 				self.x = 0 + ((self.x + self.width) - self.screen.get_width())
 
@@ -72,8 +77,10 @@ class Shape:
 		if not with_bounds:
 			self.y += increment
 		else:
-			if self.y + self.height <= self.screen.get_height():
+			if self.y + self.height <= self.screen.get_height() and self.y + increment >= 0:
 				self.y += increment
+			elif self.y + increment < (0 - self.height):
+				self.y = (self.screen.get_height() - self.height)
 			else:
 				self.y = 0 + ((self.y + self.height) - self.screen.get_height())
 
@@ -125,7 +132,22 @@ class Shape:
 
 class Rectangle(Shape):
 	def __init__(self, x, y, width, height, color=(0, 0, 0), screen=None):
-		super().__init__(x, y, width, height, color, screen)
+		self.width = width
+		self.height = height
+		super().__init__(x, y, color, screen)
 
 	def draw(self, scr):
 		pygame.draw.rect(scr, self.color, pygame.Rect(self.x, self.y, self.width, self.height))
+
+
+class Circle(Shape):
+	def __init__(self, x, y, radius, color=(0, 0, 0), screen=None):
+		super().__init__(x, y, color, screen)
+		self.radius = radius
+		self.color = color
+		self.screen = screen
+		self.width = radius
+		self.height = radius
+
+	def draw(self, scr):
+		pygame.draw.circle(scr, self.color, (self.x, self.y), self.radius)
