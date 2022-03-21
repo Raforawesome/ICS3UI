@@ -40,3 +40,4 @@ while running:
 	shape_manager.draw_shapes()
 	gravity_manager.gravity_step()
 	pygame.display.update()
+	
