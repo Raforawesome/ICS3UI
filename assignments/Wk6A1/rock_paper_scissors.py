@@ -10,7 +10,9 @@ Class: ICS3UI-02
 import os
 import pygame
 import random
+import time
 import image_abstraction
+random.seed(time.time())
 
 # resolution selection
 resolution = (1000, 1000)  # resolution of the game
@@ -45,7 +47,8 @@ image_names = [i for i in os.listdir("images/")]  # get a list of all the images
 images = {i.split(".")[0]: image_abstraction.Image("images/" + i) for i in image_names}  # create a list of image objects
 scissors_open = False  # variable to hold the state of the scissors
 animate_scissors_for_iterations = 0  # internal counter variable
-skipped_frames = 5  # how many frames per state switch
+skipped_frames = 10  # how many frames per state switch
+picked = ""  # variable to hold the player's choice
 
 
 # set up our images
@@ -55,7 +58,7 @@ def get_image(name):  # Time complexity O(n) but there are no better options
 			return i
 
 
-exceptions = ["scissors_open", "scissors_closed", "title", "start_button", "quit_button"]  # list of exceptions to rps renders
+exceptions = ["scissors_open", "scissors_closed", "title", "start_button", "quit_button", "restart_button", "rock_wins", "paper_wins", "scissors_wins"]  # list of exceptions to rps renders
 
 
 def render_rps():  # function to render images based on the state of scissors_open
@@ -66,6 +69,21 @@ def render_rps():  # function to render images based on the state of scissors_op
 		to_render.append(images["scissors_closed"])  # add the scissors closed image to the list of images to render
 	for i in to_render:  # render all the images
 		i.render(screen)
+
+# set up a rendering order for the images
+rps_render_order = [
+	"title_rc",
+	"start_button",
+	"quit_button",
+	"scissors_closed",
+	"scissors_open",
+]
+
+def get_order(filename):
+	return rps_render_order.index(filename)
+
+def setorder(filename, order):
+	rps_render_order[rps_render_order.index(filename)] = order
 
 
 # sizing and positioning functions
@@ -169,6 +187,30 @@ r.set_x(align_to_bound(r, "center", 3, 0))
 p.set_x(align_to_bound(p, "center", 3, 1))
 so.set_x(align_to_bound(so, "center", 3, 2))
 sc.set_x(align_to_bound(sc, "center", 3, 2))
+r.set_y(resolution[1] - r.height - (resolution[1] // 10) * 2)
+p.set_y(resolution[1] - p.height - (resolution[1] // 10) * 2)
+so.set_y(resolution[1] - so.height - (resolution[1] // 10) * 2)
+sc.set_y(resolution[1] - sc.height - (resolution[1] // 10) * 2)
+
+def pick_rock():
+	global picked
+	advance_screen()
+	picked = "rock"
+
+def pick_paper():
+	global picked
+	advance_screen()
+	picked = "paper"
+
+def pick_scissors():
+	global picked
+	advance_screen()
+	picked = "scissors"
+
+register_click_event("rock", r, pick_rock, "pick")
+register_click_event("paper", p, pick_paper, "pick")
+register_click_event("scissors", sc, pick_scissors, "pick")
+
 def pick_screen():
 	title = images["title_rc"]
 
@@ -177,8 +219,63 @@ def pick_screen():
 	render_rps()
 
 
+# choose a random value out of "rock", "paper", or "scissors" for the bot to pick
+bot_pick = random.choice(["rock", "paper", "scissors"])
+bot_img = None
+img = None
+if bot_pick == "rock":
+	bot_img = image_abstraction.Image("images/rock.png")
+elif bot_pick == "paper":
+	bot_img = image_abstraction.Image("images/paper-original.png")
+elif bot_pick == "scissors":
+	bot_img = image_abstraction.Image("images/scissors_closed.png")
+resize_horizontal(bot_img)
+bot_img.set_x(align_to_bound(bot_img, "left", 3, 2))
+bot_img.set_y(resolution[1] - bot_img.height - (resolution[1] // 10) * 3.25)
+moved = False
+winner = None
+winner_img = None
+rendered_quit = False
+
+
+def restart():
+	global scene, moved
+	scene = "start"
+	moved = False
+
 def end_screen():
-	pass
+	global picked, img, winner, moved, rendered_quit
+	if img is None:
+		if picked == "rock":
+			img = images["rock"]
+		elif picked == "paper":
+			img = images["paper-original"]
+		elif picked == "scissors":
+			img = images["scissors_closed"]
+		img.set_y(resolution[1] - img.height - (resolution[1] // 10) * 3.25)
+		img.set_x(align_to_bound(img, "right", 3))
+	if winner is None:
+		to_win = {
+			"rock": "paper",
+			"paper": "scissors",
+			"scissors": "rock"
+		}
+		if bot_pick == to_win[picked]:
+			winner = "bot"
+		elif picked == to_win[bot_pick]:
+			winner = "player"
+		else:
+			winner = "tie"
+		print(winner)
+
+	# render images
+	img.render(screen)
+	bot_img.render(screen)
+	if rendered_quit is False:
+		rendered_quit = True
+		time.sleep(2)
+		images["quit_button"].render(screen)
+		register_click_event("restart", images["quit_button"], restart, "end")
 
 
 # Structure:
@@ -193,7 +290,7 @@ screen_refs = {
 # variables and functions related to the loops
 running = True
 pygame.display.flip()
-fps = 15
+fps = 30
 elapsed = 0  # internal timer
 
 
@@ -217,7 +314,7 @@ def update_scissors():
 
 
 while running:  # only run program while our user wants to
-	clock.tick(fps)  # set the clock to 15 fps
+	clock.tick(fps)  # set the clock to our fps variable
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False  # quit the game
@@ -225,7 +322,7 @@ while running:  # only run program while our user wants to
 			for event_name in click_events.keys():
 				v = click_events[event_name]
 				if v[0]["x"][0] <= event.pos[0] <= v[0]["x"][1] and v[0]["y"][0] <= event.pos[1] <= v[0]["y"][1]:
-					if v[2] == "start":
+					if v[2] == scene:
 						v[1]()  # call the callback function
 						break  # break out of the loop (prevents unneeded iterations)
 
