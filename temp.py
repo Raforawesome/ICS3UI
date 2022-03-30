@@ -1,143 +1,112 @@
-import pygame, sys, random, time
-import dice_draw
+# create a binary search function
+def binary_search(ls, item):
+	low = 0
+	high = len(ls) - 1
 
-pygame.init()
-
-screen = pygame.display.set_mode((600, 400))
-
-# colours
-blue = (185, 198, 222)
-white = (255, 255, 255)
-darkBlue = (97, 131, 171)
-
-# fonts
-font1 = pygame.font.Font("ShareTechMono-Regular.ttf", 50)
-font2 = pygame.font.Font("ShareTechMono-Regular.ttf", 20)
-font3 = pygame.font.Font("ShareTechMono-Regular.ttf", 14)
-
-
-def roll():
-	roll = random.choice([1, 2, 3, 4, 5, 6])
-	fn = None
-	if roll == 1:
-		fn = dice_draw.draw_one
-	elif roll == 2:
-		fn = dice_draw.draw_two
-	elif roll == 3:
-		fn = dice_draw.draw_three
-	elif roll == 4:
-		fn = dice_draw.draw_four
-	elif roll == 5:
-		fn = dice_draw.draw_five
-	elif roll == 6:
-		fn = dice_draw.draw_six
-	return [roll, fn]
+	while low <= high:
+		mid = (low + high) // 2
+		guess = ls[mid]
+		if guess == item:
+			return mid
+		if guess > item:
+			high = mid - 1
+		else:
+			low = mid + 1
+	return None
 
 
-def draw_text(surface, color, text, font, x, y):  # easy text function
-	words = font.render(text, 1, color)
-	text_rect = words.get_rect()
-	text_rect.topleft = (x, y)
-	surface.blit(words, text_rect)
+my_list = [1, 3, 5, 7, 9]
+print(binary_search(my_list, 3))
+print(binary_search(my_list, -1))
 
 
-def main():
-	while True:
-		screen.fill(blue)  # clear screen
-
-		mx, my = pygame.mouse.get_pos()  # gets pos of mouse
-
-		# draw menu buttons
-		instruction_button = pygame.Rect(40, 320, 160, 50)
-		play_button = pygame.Rect(220, 320, 160, 50)
-		quit_button = pygame.Rect(400, 320, 160, 50)
-		pygame.draw.rect(screen, white, instruction_button, 0, 15)
-		pygame.draw.rect(screen, white, play_button, 0, 15)
-		pygame.draw.rect(screen, white, quit_button, 0, 15)
-		draw_text(screen, white, 'Roll the Dice', font1, 120, 120)
-		draw_text(screen, darkBlue, 'Intructions', font2, 60, 332)
-		draw_text(screen, darkBlue, 'Play', font2, 278, 332)
-		draw_text(screen, darkBlue, 'Quit', font2, 460, 332)
-
-		# play symbol
-		# pygame.draw.polygon(screen, darkBlue, [(290,330), (315, 345), (290, 360)])
-
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				pygame.quit()
-				sys.exit()
-			if event.type == pygame.MOUSEBUTTONDOWN:
-				if instruction_button.collidepoint((mx, my)):
-					instruction_screen()
-				if play_button.collidepoint((mx, my)):
-					game()
-				if quit_button.collidepoint((mx, my)):
-					quit()
-
-		pygame.display.update()
+# create a DFS function
+def dfs(graph, start):
+	visited, stack = set(), [start]
+	while stack:
+		vertex = stack.pop()
+		if vertex not in visited:
+			visited.add(vertex)
+			stack.extend(graph[vertex] - visited)
+	return visited
 
 
-def game():
-	running = True
-	while running:
-		screen.fill(blue)  # clear screen
+# create a binary tree
+class BinaryTree:
+	def __init__(self, rootObj):
+		self.key = rootObj
+		self.leftChild = None
+		self.rightChild = None
 
-		# back button
-		back_button = pygame.Rect(20, 20, 55, 15)
-		draw_text(screen, white, '<< Back', font3, 20, 20)
+	def insertLeft(self, newNode):
+		if self.leftChild == None:
+			self.leftChild = BinaryTree(newNode)
+		else:
+			t = BinaryTree(newNode)
+			t.leftChild = self.leftChild
+			self.leftChild = t
 
-		draw_text(screen, white, 'Roll the Dice', font1, 130, 20)
-		draw_text(screen, white, 'Click the dice to roll', font2, 170, 80)
+	def insertRight(self, newNode):
+		if self.rightChild == None:
+			self.rightChild = BinaryTree(newNode)
+		else:
+			t = BinaryTree(newNode)
+			t.rightChild = self.rightChild
+			self.rightChild = t
 
-		# game logic
+	def getRightChild(self):
+		return self.rightChild
 
-		mx, my = pygame.mouse.get_pos()  # gets pos of mouse
+	def getLeftChild(self):
+		return self.leftChild
 
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				pygame.quit()
-				running = False
-				sys.exit()
-			if event.type == pygame.MOUSEBUTTONDOWN:
-				if back_button.collidepoint((mx, my)):
-					main()
-					else:
-					res = roll()
-					res[1]()
+	def setRootVal(self, obj):
+		self.key = obj
 
-
-pygame.display.update()
-
-
-def instruction_screen():
-	running = True
-	while running:
-		screen.fill(blue)  # clear screen
-
-		# back button
-		back_button = pygame.Rect(20, 20, 55, 15)
-		draw_text(screen, white, '<< Back', font3, 20, 20)
-
-		# instructions
-		draw_text(screen, white, 'Instructions', font1, 140, 20)
-		draw_text(screen, white, 'Click the dice with your mouse', font2, 140, 120)
-		draw_text(screen, white, 'The program will randomly generate a ', font2, 100, 180)
-		draw_text(screen, white, 'number on the dice for you', font2, 150, 210)
-		draw_text(screen, white, 'This program can be used in the future', font2, 100, 270)
-		draw_text(screen, white, 'to be incorporated in other games', font2, 130, 300)
-
-		mx, my = pygame.mouse.get_pos()  # gets pos of mouse
-
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				pygame.quit()
-				running = False
-				sys.exit()
-			if event.type == pygame.MOUSEBUTTONDOWN:
-				if back_button.collidepoint((mx, my)):
-					main()
-
-		pygame.display.update()
+	def getRootVal(self):
+		return self.key
 
 
-main()
+# create a function to traverse a binary tree
+def preorder(tree):
+	if tree:
+		print(tree.getRootVal())
+		preorder(tree.getLeftChild())
+		preorder(tree.getRightChild())
+
+
+def inorder(tree):
+	if tree:
+		inorder(tree.getLeftChild())
+		print(tree.getRootVal())
+		inorder(tree.getRightChild())
+
+
+def postorder(tree):
+	if tree:
+		postorder(tree.getLeftChild())
+		postorder(tree.getRightChild())
+		print(tree.getRootVal())
+
+
+def postorder_nonrecursive(tree):
+	stack = []
+	while tree or stack:
+		if tree:
+			stack.append(tree)
+			tree = tree.getLeftChild()
+		else:
+			tree = stack.pop()
+			tree = tree.getRightChild()
+
+
+def preorder_nonrecursive(tree):
+	stack = []
+	while tree or stack:
+		if tree:
+			print(tree.getRootVal())
+			stack.append(tree)
+			tree = tree.getLeftChild()
+		else:
+			tree = stack.pop()
+			tree = tree.getRightChild()
