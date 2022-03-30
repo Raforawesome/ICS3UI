@@ -69,3 +69,6 @@ class Image:
 		self.rect = self.image.get_rect()
 		self.height = self.rect.height
 		self.width = self.rect.width
+
+	def __call__(self):
+		return self.image

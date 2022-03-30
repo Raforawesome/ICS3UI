@@ -91,6 +91,14 @@ def center_image_to_point(image, x, y):  # returns position as if the anchor poi
 	return x - image.get_width() / 2, y - image.get_height() / 2
 
 
+def lerp(a, b, i):  # linear interpolation
+	return a + (b - a) * i
+
+
+def bezier(a, b, c, d, i):  # bezier curve (quadratic lerp)
+	return lerp(lerp(a, b, i), lerp(c, d, i), i)
+
+
 def align_to_bound(image, align_to, bound, div_num=0):  # function to align an image to a bound
 	div = resolution[0] // bound
 	if align_to == "left":
@@ -131,7 +139,7 @@ click_events = {}
 
 def register_click_event(name, img, callback, scr):
 	if name in click_events.keys():
-		return
+		del click_events[name]
 	x1 = img.x
 	y1 = img.y
 	x2 = img.x + img.width
@@ -183,10 +191,6 @@ resize_horizontal(r)
 resize_horizontal(p)
 resize_horizontal(so)
 resize_horizontal(sc)
-r.set_x(align_to_bound(r, "center", 3, 0))
-p.set_x(align_to_bound(p, "center", 3, 1))
-so.set_x(align_to_bound(so, "center", 3, 2))
-sc.set_x(align_to_bound(sc, "center", 3, 2))
 r.set_y(resolution[1] - r.height - (resolution[1] // 10) * 2)
 p.set_y(resolution[1] - p.height - (resolution[1] // 10) * 2)
 so.set_y(resolution[1] - so.height - (resolution[1] // 10) * 2)
@@ -207,44 +211,45 @@ def pick_scissors():
 	advance_screen()
 	picked = "scissors"
 
-register_click_event("rock", r, pick_rock, "pick")
-register_click_event("paper", p, pick_paper, "pick")
-register_click_event("scissors", sc, pick_scissors, "pick")
 
 def pick_screen():
+	global r, p, so, sc
 	title = images["title_rc"]
 
 	# render images
 	title.render(screen, title_x, title_y)
+	r.set_x(align_to_bound(r, "center", 3, 0))
+	p.set_x(align_to_bound(p, "center", 3, 1))
+	so.set_x(align_to_bound(so, "center", 3, 2))
+	sc.set_x(align_to_bound(sc, "center", 3, 2))
+	register_click_event("rock", r, pick_rock, "pick")
+	register_click_event("paper", p, pick_paper, "pick")
+	register_click_event("scissors", sc, pick_scissors, "pick")
 	render_rps()
 
 
 # choose a random value out of "rock", "paper", or "scissors" for the bot to pick
-bot_pick = random.choice(["rock", "paper", "scissors"])
 bot_img = None
 img = None
-if bot_pick == "rock":
-	bot_img = image_abstraction.Image("images/rock.png")
-elif bot_pick == "paper":
-	bot_img = image_abstraction.Image("images/paper-original.png")
-elif bot_pick == "scissors":
-	bot_img = image_abstraction.Image("images/scissors_closed.png")
-resize_horizontal(bot_img)
-bot_img.set_x(align_to_bound(bot_img, "left", 3, 2))
-bot_img.set_y(resolution[1] - bot_img.height - (resolution[1] // 10) * 3.25)
 moved = False
 winner = None
 winner_img = None
 rendered_quit = False
+move = None
+
+rb = images["restart_button"]
+qb = images["quit_button"]
 
 
 def restart():
 	global scene, moved
 	scene = "start"
 	moved = False
+	winner = None
+	plr_img = None
 
 def end_screen():
-	global picked, img, winner, moved, rendered_quit
+	global picked, img, winner, moved, rendered_quit, qb, rb, bot_img
 	if img is None:
 		if picked == "rock":
 			img = images["rock"]
@@ -255,6 +260,16 @@ def end_screen():
 		img.set_y(resolution[1] - img.height - (resolution[1] // 10) * 3.25)
 		img.set_x(align_to_bound(img, "right", 3))
 	if winner is None:
+		bot_pick = random.choice(["rock", "paper", "scissors"])
+		if bot_pick == "rock":
+			bot_img = image_abstraction.Image("images/rock.png")
+		elif bot_pick == "paper":
+			bot_img = image_abstraction.Image("images/paper-original.png")
+		elif bot_pick == "scissors":
+			bot_img = image_abstraction.Image("images/scissors_closed.png")t
+		resize_horizontal(bot_img)
+		bot_img.set_x(align_to_bound(bot_img, "left", 3, 2))
+		bot_img.set_y(resolution[1] - bot_img.height - (resolution[1] // 10) * 3.25)
 		to_win = {
 			"rock": "paper",
 			"paper": "scissors",
@@ -271,11 +286,16 @@ def end_screen():
 	# render images
 	img.render(screen)
 	bot_img.render(screen)
-	if rendered_quit is False:
-		rendered_quit = True
-		time.sleep(2)
-		images["quit_button"].render(screen)
-		register_click_event("restart", images["quit_button"], restart, "end")
+	# qb.render(screen)
+	rb.render(screen)
+	qb.resize(button_scale_x, button_scale_y)
+	rb.resize(button_scale_x, button_scale_y)
+	qb.set_x(align_to_bound(qb, "left", 3, 2))
+	qb.set_y(resolution[1] - qb.height - (resolution[1] // 10) * 0.5)
+	rb.set_x(align_to_bound(rb, "right", 3))
+	rb.set_y(resolution[1] - rb.height - (resolution[1] // 10) * 0.5)
+	register_click_event("quit", qb, o_quit, "end")
+	register_click_event("restart", rb, restart, "end")
 
 
 # Structure:
