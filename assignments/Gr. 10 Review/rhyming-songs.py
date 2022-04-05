@@ -19,7 +19,6 @@ phonetics = {
 	1: 'one'
 }
 
-
 def get_verse(num):
 	return f"""There were {phonetics[num]} in the bed
 And the little one said,
@@ -27,7 +26,6 @@ And the little one said,
 So they all rolled over and
 one fell out
 """
-
 
 for i in range(10, 0, -1):
 	print(get_verse(i))
