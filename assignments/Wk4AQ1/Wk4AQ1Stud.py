@@ -132,41 +132,6 @@ jobs = {
 # Note: You may not simply add week 4 data given to the list above.
 # On your final run, so it is saved in the file, add all degrees.
 
-def dictionary_to_CSV(d, file_name):
-	try:
-		final = ""
-
-		for i, k in enumerate(d.keys()):
-			v = d[k]
-			final = final + f'{v},{k}\n'
-
-		sys_out = open(file_name, "rw")
-		sys_out.write(final)
-		sys_out.close()
-	except:
-		return False
-	else:
-		return True
-
-
-def CSVToDict(filename):
-	l = {}
-
-	file = open(filename, 'r')
-	lines = file.read().splitlines()
-	file.close()
-
-	for i, v in enumerate(lines):
-		to_add = []
-
-		elements = v.split(',')
-		for _, e in enumerate(elements):
-			to_add = [*to_add, e.replace('"', '')]
-
-		l[i] = to_add
-
-	return l
-
 
 def lookup():
 	# look up a word from week 1 and 2 to check...

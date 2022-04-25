@@ -1,0 +1,41 @@
+Assignment,storing a new value into an already existing variable; replacing the previous value.
+Blit,to copy a large section of image data from one surface to another. This is how you draw a sprite on the screen.  Blit can also be used to implement semi,transparent objects.
+Collection,an object that stores a group of other objects; called its elements.
+Colors ,Colours are defined as RGB (red; green; blue) and mixing them. Each base color is represented as a number between 0 (minimum) and 255 (maximum) which occupies 1 byte in memory 
+Comments,text that programmers include in a program to explain their code.  The interpreter ignores comments.
+Conditional,a syntactic structure that controls other statements
+Console Input or User Input,responses typed in by the user when an interactive program pauses for input.
+Cumulative Algorithm,An operation in which an overall value is computed incrementally; often using a loop.
+Data Type,a name for a group of values that are all related; such as all integers or int in Python.
+Decrementing,decreasing a value; default is 1; but it can be specified.
+Defensive Programming,is the process by which you create code that does not crash even when the user might enter something wrong or questionable.  Raising an exception is an example of Defensive Programming sometimes referred to as “bullet proofing your code.”
+Dictionary,a collection of key/value pairs in which each key is associated with a corresponding value. (or efficiently looked up using its key).
+Dictionary Comprehension,an expression that specifies a new dictionary and its elements based on an existing dictionary or other sequence of values (in layman’s terms think copy).
+Dirty Rects ,a rectangle area of what has changed on the screen. Called dirty rects because the rectangle has been dirtied (ie: modified). Useful for speeding up screen redraws; because if only part of the screen has changed; then you only need to update that part of the screen again.
+Display ,(graphical display) PyGame has it’s own display separate from the console.  The display submodule of PyGame helps to control how the overall game looks and acts.
+Display(PyGame),special display mode; helps control how the overall game looks and acts
+Explicit conversion,you must put the type name in front of the expression in Python. type(expression)
+Expression,a simple value or a set of operations that produces a value.
+Factoring,Moving common code our of an if/else statements to remove redundancy.
+Flow of Control  ; The order in which the statements of a program are executed.
+Implicit conversion,two numbers that are frequently mixed are ints and floats.  Python converts the int to a float automatically when computing values.
+Incrementing  , increasing a value; default is 1; but it can be specified.
+Initialization,defining a variable for the first time in your program.
+Input modules ,tools for dealing with user input from a mouse; keyboard; or joystick. There is a built-in Pygame object to represent mouse; keyboard and tools.
+Key,a unique identifier for a record of data that a user wants to look up.
+Keywords,a set of words that have a specific meaning that cannot be randomly used as variables or names.  Examples are True False class if else.  For a full set please see Python Keywords
+List,an ordered collection of values (elements); often accessed using integer indexes of by iteration. (for loops)
+Nested Collection (Compound Collection),a collection that contains other collections inside it; such as a list of sets or a dictionary of lists.  
+Operator,a special symbol (like + or *) that is used to indicate an operation to be performed on one or more values.
+Precedence,the power of an operator; which determines how to group and evaluate parts of an expression.
+Rect ,an object that represents a rectangle.  Since all surfaces in pygame are rectangular; each one has a rect associated with it. Rect is used to help determine the size; position and collision of objects.
+Set,a collection of elements that is guaranteed to contain no duplicates.
+Sprite,a visual object; capable of moving around the screen and being animated. Pygame includes a simple sprite class and several Group classes to organize sprites.
+Statement,an executable (means it will run) unit of code that represents a single complete command.
+String Literal,any collection of text characters in quotes. (they usually make sense to someone; but they don’t have to!)
+Surface ,an object that represents graphical information. In Pygame; the screen is a surface too. Loaded image data (.png; .jpg; .bmp) is stored in the surface and surfaces can be written out to image files. 
+Value,information in a data collection that is related to a given key. 
+Variable,a memory location with a name that stores a value.
+Variable Definition,a request to set aside memory for a new variable with a given name and value.
+Variables,a memory location with a name that stores a value
+Whitespace,blank characters such as spaces; tabs; line breaks etc. are called whitespace.
