@@ -5,6 +5,8 @@ Due Date: Apr 30, 2022 11:59 PM
 Question or problem: Wk 10 Question 1
 Class: ICS3UI-02
 """
+import self as self
+
 '''*** Watch for my comments with *******
 ***    - big hints for what you need to add -also where you need to add it.
 *** Note: There are pieces of code you should not touch shown with ~~~~ in the comments
@@ -31,30 +33,44 @@ class Student:
 	def calculate_age(self, name, birth_year):
 		# calculate age and set it as an age
 		# return new object
-		return f'{name}\t {date.today().year - birth_year}'
+		# return f'{name}\t {date.today().year - birth_year}'
+		return date.today().year - birth_year
 
 	def show(self):
-		pass
-
-	# ******print(.....
+		print(f"""
+			Student Name: {self.name}
+			Student Last Name: {self.surname}
+			Student Number: {self.num}
+			Current Age: {self.age}
+		""")
 	'''This was used to print out very basic test cases - see show below
 	in the program - check to see it was working before all functionality'''
 
 
-class School:  # ~~~~~~~~ given - it works! Don't toudh this.
+class School:  # ~~~~~~~~ given - it works! Don't touch this.
 	def __init__(self, *subjects):
 		self.subjects = list(subjects)
 
 	def prnt_subjects(self, *subjects):
-		pass
+		final = "Subjects: "
+		for i, s in enumerate(subjects):
+			if i == len(subjects) - 1:
+				final += f"{s}"
+			else:
+				final += f"{s}, "
+		return final
 	# ******** need to add code here to get printout and/or save to list
 	# Hint: return ...
 	# 2nd Hint - see prnt_details
 
 
 class Subject:
+	def __init__(self, name, students):
+		self.name = name
+		self.students = students
+
 	def __add__(self, other):
-		pass
+		return f'{self} + {other.name}'
 	# *********** need to add code here to get printout and/or save to list
 	# Hint: return...
 
@@ -62,35 +78,49 @@ class Subject:
 def ask_first():
 	try:
 		first = input("Please enter the student's first name: ")
-	except EOFError as E:  # Thrown when input() hits EOF without inpu
-		print("Something went wrong!")
+	except EOFError as E:  # Thrown when input() hits EOF without input
+		print("Something went wrong getting input!")
 	else:
 		return first
-		print("Checking, remove first", first)  # only happens if return is not successful
+		# print("Checking, remove first", first)  # (return will always terminate functions)
 
 
 def ask_last():
-	pass
+	try:
+		last = input("Please enter the student's last name: ")
+	except EOFError as E:  # Thrown when input() hits EOF without input
+		print("Something went wrong getting input!")
+	else:
+		return last
 
 
 # ********** Very similar to ask_first you COULD combine
+cur_age = 0
 
 
 def ask_cur_age():
+	global cur_age
 	try:
-		know_age = input("Do you know the student's current age? (y/n)")
+		know_age = input("Do you know the student's current age? (y/n) ")
 		if know_age.lower() == 'n':
 			# ask the year they were born
 			year = input("Please enter the year the student was born (yyyy): ")
 			# call the class to calculate the age
-			cur_age = Student.calculate_age("calc", "Name", year)
+			# cur_age = Student.calculate_age("calc", "Name", year)
+			try:
+				cur_age = Student.calculate_age(None, "Name", int(year.strip()))
+			except ValueError as V:
+				print("Something went wrong calculating age!  Did you enter a valid number?")
 		# *********** Note how this returns, you might want to strip?
 		# cur_age = ___________
 		else:
 			# user input the age
 			cur_age = input("Please enter the student's current age: ")
-	except:
-		pass
+		return cur_age
+	except EOFError as E:  # Thrown when input() hits EOF without input
+		print("Something went wrong getting input!")
+		return "N/A"
+
 
 
 # *********** similar to above returning the values you need or appropriate response
@@ -98,8 +128,10 @@ def ask_cur_age():
 def ask_st_num():
 	try:
 		st_num = input("Please enter the student's student number: ")
-	except:
-		pass
+		return st_num
+	except EOFError as E:  # Thrown when input() hits EOF without input
+		print("Something went wrong getting student number!")
+		return "N/A"
 
 
 # ****** finish this off
@@ -107,45 +139,53 @@ def ask_st_num():
 def ask_subj1():
 	try:
 		subj1 = input("Please enter the student's first Subject for this semester: ")
-	except:
-		pass
+		return subj1
+	except EOFError as E:  # Thrown when input() hits EOF without input
+		print("Something went wrong getting input!")
+		return "N/A"
 
 
 # ********* finish this off
 def ask_subj2():
 	try:
-		pass
-	except:
-		pass
+		subj2 = input("Please enter the student's second Subject for this semester: ")
+		return subj2
+	except EOFError as E:  # Thrown when input() hits EOF without input
+		print("Something went wrong getting input!")
 
 
 # ********* finish this off or incorporate it into subj1 for each subject
 
 def ask_subj3():
 	try:
-		pass
-	except:
-		pass
+		subj3 = input("Please enter the student's third Subject for this semester: ")
+		return subj3
+	except EOFError as E:  # Thrown when input() hits EOF without input
+		print("Something went wrong getting input!")
+		return "N/A"
 
 
 # ********* finish this off or incorporate it into subj1 for each subject
 
 def ask_subj4():
 	try:
-		pass
-	except:
-		pass
+		subj4 = input("Please enter the student's fourth Subject for this semester or \"spare\": ")
+		return subj4
+	except EOFError as E:  # Thrown when input() hits EOF without input
+		print("Something went wrong getting input!")
+		return "N/A"
 
 
 # ********* finish this off or incorporate it into subj1 for each subject
 
 
 keep_running = True
-while keep_running == True:
+while keep_running:
 	quit = input("Would you like to enter another student's information (y/n): ")
 	if quit.lower() == 'n':
 		keep_running = False
 		print("Student entry exiting.")
+		exit()
 	else:
 		# get the date you need - could improve this
 		first = ask_first()

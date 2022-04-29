@@ -2,7 +2,7 @@
 Practice Problem, Week 6 Assignment 1: Rock Paper Scissors
 Author: Raforawesome
 Due Date: Mar 26, 2022 11:59 PM
-Question or problem: Wk6A1 Rock Paper Scissors
+Question or problem: Wk6 Rock Paper Scissors
 Class: ICS3UI-02
 """
 

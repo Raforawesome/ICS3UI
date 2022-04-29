@@ -5,7 +5,7 @@ import screens
 pygame.init()
 resolution = (600, 640)
 screen = pygame.display.set_mode(resolution)
-pygame.display.set_caption("Wk7A1 - Tahir Chaudhry")
+pygame.display.set_caption("Wk7 - Tahir Chaudhry")
 
 # create our run loop
 clock = pygame.time.Clock()
