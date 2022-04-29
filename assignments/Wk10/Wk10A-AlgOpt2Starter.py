@@ -5,8 +5,6 @@ Due Date: Apr 30, 2022 11:59 PM
 Question or problem: Wk 10 Question 1
 Class: ICS3UI-02
 """
-import self as self
-
 '''*** Watch for my comments with *******
 ***    - big hints for what you need to add -also where you need to add it.
 *** Note: There are pieces of code you should not touch shown with ~~~~ in the comments
