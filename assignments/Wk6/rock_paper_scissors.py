@@ -266,7 +266,7 @@ def end_screen():
 		elif bot_pick == "paper":
 			bot_img = image_abstraction.Image("images/paper-original.png")
 		elif bot_pick == "scissors":
-			bot_img = image_abstraction.Image("images/scissors_closed.png")t
+			bot_img = image_abstraction.Image("images/scissors_closed.png")
 		resize_horizontal(bot_img)
 		bot_img.set_x(align_to_bound(bot_img, "left", 3, 2))
 		bot_img.set_y(resolution[1] - bot_img.height - (resolution[1] // 10) * 3.25)
